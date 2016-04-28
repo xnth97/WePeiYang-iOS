@@ -13,6 +13,7 @@
 #import "AccountManager.h"
 #import "WebViewJavascriptBridge.h"
 
+
 @interface wpyWebViewController () <UIWebViewDelegate>
 
 @property (nonatomic, strong) UIBarButtonItem *backBarButtonItem;
@@ -87,7 +88,15 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    NSAssert(self.navigationController, @"wpyWebViewController needs to be contained in a UINavigationController. If you are presenting SVWebViewController modally, use SVModalWebViewController instead.");
+    _bridge = [WebViewJavascriptBridge bridgeForWebView:_webView];
+    [_bridge registerHandler:@"tokenHandler_iOS" handler:^(id data, WVJBResponseCallback responseCallback) {
+        responseCallback([[NSUserDefaults standardUserDefaults] objectForKey:TOKEN_SAVE_KEY]);
+        self.webView.delegate = self;
+    }];
+    
+    self.webView.delegate = self;
+    
+    NSAssert(self.navigationController, @"SVWebViewController needs to be contained in a UINavigationController. If you are presenting SVWebViewController modally, use SVModalWebViewController instead.");
     
     [super viewWillAppear:animated];
     
