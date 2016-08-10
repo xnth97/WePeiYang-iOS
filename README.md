@@ -1,21 +1,15 @@
-WePeiYang-iOS
+WePeiYang-iOS(Deprecated)
 =============
-The iOS Client for Tianjin University.
+The iOS client for Tianjin University.
 
-# Introduction
+# Deprecated
 
-WePeiYang(微北洋) is a widely-used utility in Tianjin University. This project is intend to build the iOS branch of WePeiYang in Objective-C and Swift.
+Due to my graduation from Tianjin University, this repository is no longer maintained. The official repository is transferred to [twtstudio/WePeiYang-iOS](https://github.com/twtstudio/WePeiYang-iOS). Issue reports and pull requests here will not be attended any more.
 
-# Features
-
-WePeiYang is under a complete refactory work. The additional content would be added to this document once we complete the refactory.
-
-# Build
-
-Requirements: Xcode 7, CocoaPods, iOS 8.0+
+ In the past three years, I've devoted most of my effort to this project, and now it's high time I withdrew from the project that I created three years ago. From the very beginning, the idea of WePeiYang came from several intelligent individuals as well as my closest friends. I must admit that I've learnt a lot from this project and [twtstudio](https://github.com/twtstudio), along with the people I met and worked together there.
 
 # Acknowledgements
 
-All included fabulous open-source projects are appreciated.
+All fabulous people I met in Tianjin University are appreciated.
 
-> Copyright 2002-2016 TWT Studio
+> Copyright 2013-2016 Yubo Qin with Love

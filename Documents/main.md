@@ -59,7 +59,7 @@ otherFailure(errorMsg: dic["message"].stringValue)
 dic = ["key1": "value1", "key2": "value2"]
 ```
 
-同时一般来说二元运算符的两边均有空格，
+同时一般来说二元运算符的两边均有空格。
 
 # 结构
 
@@ -81,7 +81,11 @@ dic = ["key1": "value1", "key2": "value2"]
 
 ## 数据库
 
-通过 FMDB 操作 SQLite，将数据库保存到 sandbox 的 documents 目录。可参考 LibraryDataManager.swift 里的实现。注意在 String 里书写 SQL 语句时建议 SQL 关键字全部使用大写。
+用户可以删除或修改的文件通过 FMDB 操作 SQLite 将数据库保存到 sandbox 的 documents 目录。可参考 LibraryDataManager.swift 里的实现。注意在 String 里书写 SQL 语句时建议 SQL 关键字全部使用大写。如：
+
+```swift
+try database.executeUpdate("CREATE TABLE Libfav(id, title, author, publisher, location)", values: nil)
+```
 
 # 底层封装
 
@@ -96,6 +100,8 @@ TODO：twtSDK 类应抽出为一个单独 .a 库和一个 .h 头文件以方便�
 ## 账户管理
 
 主要通过`AccountManager`类封装的功能。Token 主要通过`NSUserDefaults`存储在本地，同时在 App 加载之后会被写入一个特殊的单例`SolaInstance`中。每次启动会在后台线程验证 token 是否有效，若 token 过期则尝试刷新，若刷新失败则本地删除 token，即恢复未登录状态。
+
+判断登陆状态也可以首先通过`+ (BOOL)tokenExists;`方法，如果本地不存在则一定不是登陆状态。如存在则可进行数据获取/验证等操作。
 
 ## 消息显示
 
@@ -114,3 +120,20 @@ TODO：twtSDK 类应抽出为一个单独 .a 库和一个 .h 头文件以方便�
 ## UIActivity
 
 一些针对部分内容的操作可以封装为 UIActivity 的形式通过 UIActivityViewController 调用，这样比较符合系统规范。UIActivity 主要需要实现几个特定方法，随便参考某个已有实现就可以了。
+
+# 通用处理
+
+## 数据解析
+
+由于 AFNetworking 能够解析出 responseObject，在 Objective-C 中可以直接使用，在 Swift 中由于 nullable 的存在建议通过 SwiftyJSON 提供的方法将 AnyObject 类型的 responseObject 解析为 JSON 类型使用，这样可以避免掉很多由于服务器抽风产生的 crash。例：
+
+```swift
+let jsonData = JSON(responseObject)
+if jsonData["error_code"].intValue == -1 {
+    if let data = Mapper<LibraryDataItem>().mapArray(jsonData["data"].arrayObject) {
+        success(data: data)
+    }
+}
+```
+
+验证 error_code 项无误后则可以使用 ObjectMapper 将 JSON 解析成相应的 NSObject(Mappable)。注意由于 ObjectMapper 解析的是 AnyObject 类而不是 JSON 类，因此需要调用 SwiftyJSON 的 arrayObject 方法或 object 方法。
